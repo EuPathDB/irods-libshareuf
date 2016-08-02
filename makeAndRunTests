@@ -1,0 +1,69 @@
+#!/bin/bash
+set -e
+
+make
+sudo make install
+
+mkdir -p testinput
+
+if ils /ebrc/home/icatadmin/localShare &> /dev/null; then
+  irm -rf /ebrc/home/icatadmin/localShare
+fi
+sudo rm -rf /tmp/localShare
+
+if ilsresc shareResc &> /dev/null; then
+  iadmin rmresc shareResc
+fi
+
+iadmin mkresc shareResc shareuf ies.irods.vm:/tmp/localShare > /dev/null
+
+imkdir /ebrc/home/icatadmin/localShare
+
+date > testinput/choochoo
+iput -R shareResc testinput/choochoo /ebrc/home/icatadmin/localShare/
+
+sudo ls -ld /tmp/localShare/home/icatadmin/localShare
+sudo ls -l /tmp/localShare/home/icatadmin/localShare/choochoo
+
+#### REPLICATION TESTS ####################
+
+if ils /ebrc/home/icatadmin/replShareRenamed &> /dev/null; then
+  irm -rf /ebrc/home/icatadmin/replShareRenamed
+fi
+if ils /ebrc/home/icatadmin/replShare &> /dev/null; then
+  irm -rf /ebrc/home/icatadmin/replShare
+fi
+sudo rm -rf /tmp/shareReplResc
+
+if ilsresc replShareResc | grep -q shareReplResc1; then
+  iadmin rmchildfromresc replShareResc shareReplResc1
+fi
+if ilsresc replShareResc | grep -q shareReplResc2 ; then
+  iadmin rmchildfromresc replShareResc shareReplResc2
+fi
+if ilsresc replShareResc &> /dev/null; then
+  iadmin rmresc replShareResc
+fi
+if ilsresc shareReplResc1 &> /dev/null; then
+  iadmin rmresc shareReplResc1
+fi
+if ilsresc shareReplResc2 &> /dev/null; then
+  iadmin rmresc shareReplResc2
+fi
+
+iadmin mkresc replShareResc replication > /dev/null
+iadmin mkresc shareReplResc1 shareuf ies.irods.vm:/tmp/shareReplResc > /dev/null
+iadmin mkresc shareReplResc2 shareuf rs1.irods.vm:/tmp/shareReplResc > /dev/null
+iadmin addchildtoresc replShareResc shareReplResc1
+iadmin addchildtoresc replShareResc shareReplResc2
+
+
+imkdir /ebrc/home/icatadmin/replShare
+date > testinput/trollytrolly
+iput -R replShareResc testinput/trollytrolly /ebrc/home/icatadmin/replShare/
+
+sudo ls -ld /tmp/shareReplResc/home/icatadmin/replShare
+sudo ls -l /tmp/shareReplResc/home/icatadmin/replShare/trollytrolly
+
+imv /ebrc/home/icatadmin/replShare /ebrc/home/icatadmin/replShareRenamed
+sudo ls -ld /tmp/shareReplResc/home/icatadmin/replShareRenamed
