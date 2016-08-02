@@ -14,4 +14,3 @@ To install this plugin:
 
      $ make
      $ sudo make install
-     $ chown irods:irods /var/lib/irods/plugins/resources/libexamplefilesystem.so
