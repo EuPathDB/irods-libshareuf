@@ -41,6 +41,8 @@ RENCI's but I remove any stock packages for good measure.
 
 To install this plugin:
 
+    $ git clone https://github.com/EuPathDB/irods-libshareuf.git
+    $ cd irods-libshareuf
     $ mkdir build
     $ cd build
     $ cmake3 -DCMAKE_INSTALL_PREFIX=/ ..
@@ -52,6 +54,11 @@ To install this plugin:
 To make RPM
 
     $ make package
+
+### Testing
+
+    $ cd irods-libshareuf
+    $ ./makeAndRunTests
 
 ### Example usage
 
