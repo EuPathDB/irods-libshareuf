@@ -3,8 +3,8 @@ set -e
 
 IRODS_USER=icatadmin
 
-Bin="$( readlink -f -- "$( dirname — "$0" )" )"
-if [ -z $Bin ]; then
+Bin="$( readlink -f -- "$( dirname -- "$0" )" )"
+if [ -z "$Bin" ]; then
   echo "FATAL: Could not determine working directory."
   exit 1;
 fi
@@ -16,16 +16,13 @@ fi
 
 BUILDDIR="${Bin}/build"
 
-rm -rf "$BUILDDIR"
-mkdir "$BUILDDIR"
+mkdir -p "$BUILDDIR"
 cd "$BUILDDIR"
 
 cmake3 -DCMAKE_INSTALL_PREFIX=/ ..
 make clean
 make
 sudo make install
-
-mkdir -p testinput
 
 if ils /ebrc/home/${IRODS_USER}/localShare &> /dev/null; then
   irm -rf /ebrc/home/${IRODS_USER}/localShare
@@ -40,12 +37,14 @@ iadmin mkresc shareResc shareuf $HOSTNAME:/tmp/localShare > /dev/null
 
 imkdir /ebrc/home/${IRODS_USER}/localShare
 
-date > testinput/choochoo
-iput -R shareResc testinput/choochoo /ebrc/home/${IRODS_USER}/localShare/
+date > choochoo
+iput -R shareResc choochoo /ebrc/home/${IRODS_USER}/localShare/
 
 sudo ls -ld /tmp/localShare/home/${IRODS_USER}/localShare
 sudo ls -l /tmp/localShare/home/${IRODS_USER}/localShare/choochoo
 
+echo "Skipping replication tests"
+exit
 #### REPLICATION TESTS ####################
 
 if ils /ebrc/home/${IRODS_USER}/replShareRenamed &> /dev/null; then
@@ -80,11 +79,11 @@ iadmin addchildtoresc replShareResc shareReplResc2
 
 
 imkdir /ebrc/home/${IRODS_USER}/replShare
-date > testinput/trollytrolly
-iput -R replShareResc testinput/trollytrolly /ebrc/home/${IRODS_USER}/replShare/
+date > trollytrolly
+iput -R replShareResc trollytrolly /ebrc/home/${IRODS_USER}/replShare/
 
-sudo ls -ld /tmp/shareReplResc/home/${IRODS_USER}/replShare
-sudo ls -l /tmp/shareReplResc/home/${IRODS_USER}/replShare/trollytrolly
+sudo ls -ld /tmp/shareReplResc1/home/${IRODS_USER}/replShare
+sudo ls -l /tmp/shareReplResc1/home/${IRODS_USER}/replShare/trollytrolly
 
 imv /ebrc/home/${IRODS_USER}/replShare /ebrc/home/${IRODS_USER}/replShareRenamed
 sudo ls -ld /tmp/shareReplResc/home/${IRODS_USER}/replShareRenamed
