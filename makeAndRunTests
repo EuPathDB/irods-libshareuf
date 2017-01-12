@@ -1,13 +1,34 @@
 #!/bin/bash
 set -e
 
+IRODS_USER=icatadmin
+
+Bin="$( readlink -f -- "$( dirname — "$0" )" )"
+if [ -z $Bin ]; then
+  echo "FATAL: Could not determine working directory."
+  exit 1;
+fi
+
+if ! grep -q "$IRODS_USER" ~/.irods/irods_environment.json; then
+  echo "FATAL: Configure ~/.irods/irods_environment.json to use ${IRODS_USER}"
+  exit 1
+fi
+
+BUILDDIR="${Bin}/build"
+
+rm -rf "$BUILDDIR"
+mkdir "$BUILDDIR"
+cd "$BUILDDIR"
+
+cmake3 -DCMAKE_INSTALL_PREFIX=/ ..
+make clean
 make
 sudo make install
 
 mkdir -p testinput
 
-if ils /ebrc/home/icatadmin/localShare &> /dev/null; then
-  irm -rf /ebrc/home/icatadmin/localShare
+if ils /ebrc/home/${IRODS_USER}/localShare &> /dev/null; then
+  irm -rf /ebrc/home/${IRODS_USER}/localShare
 fi
 sudo rm -rf /tmp/localShare
 
@@ -15,23 +36,23 @@ if ilsresc shareResc &> /dev/null; then
   iadmin rmresc shareResc
 fi
 
-iadmin mkresc shareResc shareuf ies.irods.vm:/tmp/localShare > /dev/null
+iadmin mkresc shareResc shareuf $HOSTNAME:/tmp/localShare > /dev/null
 
-imkdir /ebrc/home/icatadmin/localShare
+imkdir /ebrc/home/${IRODS_USER}/localShare
 
 date > testinput/choochoo
-iput -R shareResc testinput/choochoo /ebrc/home/icatadmin/localShare/
+iput -R shareResc testinput/choochoo /ebrc/home/${IRODS_USER}/localShare/
 
-sudo ls -ld /tmp/localShare/home/icatadmin/localShare
-sudo ls -l /tmp/localShare/home/icatadmin/localShare/choochoo
+sudo ls -ld /tmp/localShare/home/${IRODS_USER}/localShare
+sudo ls -l /tmp/localShare/home/${IRODS_USER}/localShare/choochoo
 
 #### REPLICATION TESTS ####################
 
-if ils /ebrc/home/icatadmin/replShareRenamed &> /dev/null; then
-  irm -rf /ebrc/home/icatadmin/replShareRenamed
+if ils /ebrc/home/${IRODS_USER}/replShareRenamed &> /dev/null; then
+  irm -rf /ebrc/home/${IRODS_USER}/replShareRenamed
 fi
-if ils /ebrc/home/icatadmin/replShare &> /dev/null; then
-  irm -rf /ebrc/home/icatadmin/replShare
+if ils /ebrc/home/${IRODS_USER}/replShare &> /dev/null; then
+  irm -rf /ebrc/home/${IRODS_USER}/replShare
 fi
 sudo rm -rf /tmp/shareReplResc
 
@@ -52,18 +73,18 @@ if ilsresc shareReplResc2 &> /dev/null; then
 fi
 
 iadmin mkresc replShareResc replication > /dev/null
-iadmin mkresc shareReplResc1 shareuf ies.irods.vm:/tmp/shareReplResc > /dev/null
-iadmin mkresc shareReplResc2 shareuf rs1.irods.vm:/tmp/shareReplResc > /dev/null
+iadmin mkresc shareReplResc1 shareuf $HOSTNAME:/tmp/shareReplResc1 > /dev/null
+iadmin mkresc shareReplResc2 shareuf $HOSTNAME:/tmp/shareReplResc2 > /dev/null
 iadmin addchildtoresc replShareResc shareReplResc1
 iadmin addchildtoresc replShareResc shareReplResc2
 
 
-imkdir /ebrc/home/icatadmin/replShare
+imkdir /ebrc/home/${IRODS_USER}/replShare
 date > testinput/trollytrolly
-iput -R replShareResc testinput/trollytrolly /ebrc/home/icatadmin/replShare/
+iput -R replShareResc testinput/trollytrolly /ebrc/home/${IRODS_USER}/replShare/
 
-sudo ls -ld /tmp/shareReplResc/home/icatadmin/replShare
-sudo ls -l /tmp/shareReplResc/home/icatadmin/replShare/trollytrolly
+sudo ls -ld /tmp/shareReplResc/home/${IRODS_USER}/replShare
+sudo ls -l /tmp/shareReplResc/home/${IRODS_USER}/replShare/trollytrolly
 
-imv /ebrc/home/icatadmin/replShare /ebrc/home/icatadmin/replShareRenamed
-sudo ls -ld /tmp/shareReplResc/home/icatadmin/replShareRenamed
+imv /ebrc/home/${IRODS_USER}/replShare /ebrc/home/${IRODS_USER}/replShareRenamed
+sudo ls -ld /tmp/shareReplResc/home/${IRODS_USER}/replShareRenamed
