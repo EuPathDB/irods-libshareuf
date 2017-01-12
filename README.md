@@ -15,15 +15,23 @@ the following packages from `base` and `epel` meet the requirements.
 
     cmake3
     libquadmath-devel
-
+    openssl-devel
+    rpm-build
 
 The following packages from RENCI are required.
 
-    irods-devel
-    irods-runtime
-    irods-externals-boost1.60.0-0
-    irods-externals-boost1.60.0-0-1.0-1.x86_64
-    irods-externals-jansson2.7-0-1.0-1.x86_64
+    irods-devel-4.2.0-1.x86_64
+    irods-externals-avro1.7.7
+    irods-externals-boost1.60.0
+    irods-externals-clang-runtime3.8
+    irods-externals-clang3.8
+    irods-externals-cppzmq4.1
+    irods-externals-jansson2.7
+    irods-externals-libarchive3.1.2
+    irods-externals-zeromq4-14.1.3
+    irods-icommands-4.2.0-1.x86_64
+    irods-runtime-4.2.0-1.x86_64
+    irods-server-4.2.0-1.x86_64
 
 RENCI's boost package includes feature patches to stock boost. It's
 probably ok to have the standard `boost` package installed along with
@@ -39,6 +47,11 @@ To install this plugin:
     $ make clean
     $ make
     $ sudo make install
+
+
+To make RPM
+
+    $ make package
 
 ### Example usage
 
