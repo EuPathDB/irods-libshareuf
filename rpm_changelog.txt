@@ -1,0 +1,3 @@
+* Fri Jan 13 2017 Mark Heiges <mheiges@uga.edu> 2.0.0-1
+- updated for iRODS 4.2
+

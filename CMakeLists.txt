@@ -66,7 +66,6 @@ install(
   DESTINATION ${IRODS_PLUGINS_DIRECTORY}/resources
   )
 
-set(CPACK_PACKAGE_FILE_NAME "irods-resource-plugin-shareuf${IRODS_PACKAGE_FILE_NAME_SUFFIX}")
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 set(CPACK_COMPONENTS_GROUPING IGNORE)
@@ -76,6 +75,11 @@ set(CPACK_PACKAGE_VERSION_MINOR ${IRODS_PLUGIN_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${IRODS_PLUGIN_VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT "EuPathDB Bioinformatics Resource Center <help@eupathdb.org>")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "iRODS shared unixfilesystem plugin")
+set(CPACK_RPM_PACKAGE_DESCRIPTION 
+"A derivative of the libunixfilesystem resource plugin that creates
+directories and files with modes 0755 and 0644 on the resource
+filesystem."
+)
 set(CPACK_PACKAGE_VENDOR "EuPathDB Bioinformatics Resource Center <help@eupathdb.org>")
 SET(CPACK_PACKAGE_RELOCATABLE "false")
 
@@ -91,9 +95,11 @@ set(CPACK_RPM_COMPONENT_INSTALL OFF)
 set(CPACK_RPM_PACKAGE_RELEASE "1")
 set(CPACK_RPM_PACKAGE_LICENSE "BSD-3-Clause")
 set(CPACK_RPM_PACKAGE_VENDOR "EuPathDB Bioinformatics Resource Center")
-set(CPACK_RPM_PACKAGE_URL "https://eupathdb.org")
+set(CPACK_RPM_PACKAGE_URL "https://github.com/EuPathDB/irods-libshareuf")
 set(CPACK_RPM_PACKAGE_AUTOREQ 0)
 set(CPACK_RPM_PACKAGE_AUTOPROV 0)
+set(CPACK_RPM_FILE_NAME "irods-resource-plugin-shareuf-${IRODS_PLUGIN_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.x86_64.rpm")
+set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_CURRENT_LIST_DIR}/rpm_changelog.txt")
 
 set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
 

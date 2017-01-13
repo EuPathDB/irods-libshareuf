@@ -53,6 +53,12 @@ To install this plugin:
 
 To make RPM
 
+Confirm correct values in `CMakeLists.txt` for
+`IRODS_PLUGIN_VERSION_MAJOR`, `IRODS_PLUGIN_VERSION_MINOR`,
+`IRODS_PLUGIN_VERSION_PATCH`, `CPACK_RPM_PACKAGE_RELEASE`
+
+Use CMake packaging routines to build binary package.
+
     $ make package
 
 ### Testing
