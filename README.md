@@ -10,28 +10,27 @@ It is derived from the libunixfilesystem plug included with iRODS.
 
 ### Dependencies for make
 
-Compilation requires CMake >= 3.5 and `libquadmath` library. For EL7,
-the following packages from `base` and `epel` meet the requirements.
+Compilation requires CMake >= 3.5 and `libquadmath` library as well as
+iRODS development libraries. For EL7, the required packages can be found
+in `base`, `epel` and [`renci-irods`](https://packages.irods.org) YUM repos.
 
-    cmake3
-    libquadmath-devel
-    openssl-devel
-    rpm-build
-
-The following packages from RENCI are required.
-
-    irods-devel-4.2.0-1.x86_64
-    irods-externals-avro1.7.7
-    irods-externals-boost1.60.0
-    irods-externals-clang-runtime3.8
-    irods-externals-clang3.8
-    irods-externals-cppzmq4.1
-    irods-externals-jansson2.7
-    irods-externals-libarchive3.1.2
-    irods-externals-zeromq4-14.1.3
-    irods-icommands-4.2.0-1.x86_64
-    irods-runtime-4.2.0-1.x86_64
-    irods-server-4.2.0-1.x86_64
+    sudo yum install -y \
+      cmake3 \
+      libquadmath \
+      openssl-devel \
+      rpm-build \
+      irods-devel \
+      irods-externals-avro1.7.7-0 \
+      irods-externals-boost1.60.0-0 \
+      irods-externals-clang-runtime3.8-0 \
+      irods-externals-clang3.8-0 \
+      irods-externals-cppzmq4.1-0 \
+      irods-externals-jansson2.7-0 \
+      irods-externals-libarchive3.1.2-0 \
+      irods-externals-zeromq4-14.1.3-0 \
+      irods-icommands \
+      irods-runtime  \
+      irods-server
 
 RENCI's boost package includes feature patches to stock boost. It's
 probably ok to have the standard `boost` package installed along with
@@ -50,7 +49,6 @@ To install this plugin:
     $ make
     $ sudo make install
 
-
 To make RPM
 
 Confirm correct values in `CMakeLists.txt` for
@@ -60,6 +58,7 @@ Confirm correct values in `CMakeLists.txt` for
 Use CMake packaging routines to build binary package.
 
     $ make package
+    $ rpm --addsign irods-resource-plugin-shareuf-*.rpm
 
 ### Testing
 
